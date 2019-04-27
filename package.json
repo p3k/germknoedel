@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "command-line-args": "^5.1.1",
+    "command-line-usage": "^5.0.5"
+  },
+  "name": "germknoedel",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Tobi Schäfer <interface@p3k.org>",
+  "license": "ISC",
+  "description": "Passport code generator",
+  "bin": {
+    "germknödel": "bin/germknoedel",
+    "germknoedel": "bin/germknoedel"
+  }
+}

@@ -1,0 +1,32 @@
+# Germknödel
+
+A passport code generator. Generates passport codes like this:
+
+`26109Q5FB7D<<9203147X2205142<<<<<<<<<<<<<<<6`
+
+I wrote the basic script as a terrible dev console snippet and then got almost lost in building a neat NodeJS command-line tool from it.
+
+Currently, only German passport codes are supported. 
+
+**Contributions for other countries and document types are welcome!**
+
+The package name was an unconscious play of words because I still own a <i>Germ</i>an passport while living in Austria where [Germknödel](https://www.wikiwand.com/en/Germkn%C3%B6del) are huge. (And delicious, btw.)
+
+Now the name got stuck. _Sorry._ 🤷🏻‍
+
+## Installation
+
+`yarn global add germknoedel`
+
+## Usage
+
+`germknoedel --help`
+
+## Example
+
+`germknoedel --authority 3533 --gender female 1970-01-01 2019-12-31`
+
+## Kudos
+
+* **A. Beck** for their excellent resources about anything regarding checksum calculation, espcially the pages [Deutscher Reisepass](http://www.pruefziffernberechnung.de/R/Reisepass-DE.shtml) and [Behördenkennzahl](http://www.pruefziffernberechnung.de/Begleitdokumente/BKZ.shtml).
+* **Pi’s World** for additional information about the [checksum for the latest German passport](https://pinetik.blogspot.com/2011/03/prufziffer-fur-neuen-reisepass.html).

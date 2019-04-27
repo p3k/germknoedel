@@ -5,7 +5,7 @@
     "command-line-usage": "^5.0.5"
   },
   "name": "germknoedel",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "devDependencies": {
     "mocha": "^6.1.4"
@@ -14,10 +14,27 @@
     "test": "mocha"
   },
   "author": "Tobi Schäfer <interface@p3k.org>",
-  "license": "ISC",
+  "license": "LGPL-3.0-or-later",
   "description": "Passport code generator",
   "bin": {
     "germknödel": "bin/germknoedel",
     "germknoedel": "bin/germknoedel"
-  }
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/p3k/germknoedel.git"
+  },
+  "keywords": [
+    "passport",
+    "checksum",
+    "command-line"
+  ],
+  "bugs": {
+    "url": "https://github.com/p3k/germknoedel/issues"
+  },
+  "homepage": "https://github.com/p3k/germknoedel#readme"
 }

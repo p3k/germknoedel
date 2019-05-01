@@ -14,6 +14,8 @@ The package name was an unconscious play of words because I still own a <i>Germ<
 
 Now the name got stuck. _Sorry._ 🤷🏻‍
 
+![](https://raw.githubusercontent.com/p3k/germknoedel/3ad71e9a421750a784a4e0d1bee41082241ed253/terminal.png)
+
 ## Installation
 
 `yarn global add germknoedel`

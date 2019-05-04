@@ -1,5 +1,6 @@
 const assert = require('assert');
 const { calculate, validate } = require('../');
+const { query } = require('../lib/authorities');
 
 describe('calculate', () => {
   it('should generate a passport code', () => {
@@ -62,5 +63,15 @@ describe('validate', () => {
 
   it('should throw an error if serial is longer than required', () => {
     assert.throws(() => validate({ serial: '3533567890' }), /invalid length/i);
+  });
+});
+
+describe('query', () => {
+  it('should find authorities via search term', () => {
+    const results = query('wien');
+    assert.equal(results.constructor, Array);
+    assert.equal(results.length, 2);
+    assert.equal(results[0].id, '3533');
+    assert.equal(results[1].id, 'c4vw');
   });
 });

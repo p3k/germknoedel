@@ -10,7 +10,7 @@ Currently, only German passport codes are supported.
 
 **Contributions for other countries and document types are welcome!**
 
-The package name was an unconscious play of words because I still own a <i>Germ</i>an passport while living in Austria where [Germknödel](https://www.wikiwand.com/en/Germkn%C3%B6del) are huge. (And delicious, btw.)
+The package name was an unconscious play of words because I still own a <i>Germ</i>an passport while living in Austria where [Germknödel](https://www.wikiwand.com/en/Germkn%C3%B6del) are hugely popular. (And delicious, btw.)
 
 Now the name got stuck. _Sorry._ 🤷🏻‍
 

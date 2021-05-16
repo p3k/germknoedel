@@ -7,6 +7,23 @@ describe('calculate', () => {
     const code = calculate('abcd56789', 'X', new Date('1 Jan 1970'), new Date('31 Dec 2019'));
     assert.equal(code, 'ABCD567899D<<7001017X1912319<<<<<<<<<<<<<<<6');
   });
+
+  it('should generate a passport code from an object', () => {
+    const code = calculate({
+      serial: 'abcd56789',
+      gender: 'X',
+      dateOfBirth: new Date('1 Jan 1970'),
+      dateOfExpiry: new Date('31 Dec 2019')
+    });
+
+    assert.equal(code, 'ABCD567899D<<7001017X1912319<<<<<<<<<<<<<<<6');
+  });
+
+  it('should automatically define default values', () => {
+    const code = calculate();
+    assert.equal(code.length, 44);
+    assert(code.startsWith('0000000000D<<'));
+  });
 });
 
 describe('validate', () => {

@@ -1,4 +1,7 @@
-module.exports = {
-  calculate: require('./lib/calculate.js'),
-  validate: require('./lib/validate')
+import calculate from './lib/calculate.js';
+import validate from './lib/validate.js';
+
+export {
+  calculate,
+  validate
 };

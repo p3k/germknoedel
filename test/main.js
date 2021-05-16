@@ -1,6 +1,6 @@
-const assert = require('assert');
-const { calculate, validate } = require('../');
-const { query } = require('../lib/authorities');
+import assert from 'assert';
+import { calculate, validate } from '../index.js';
+import { query } from '../lib/authorities.js';
 
 describe('calculate', () => {
   it('should generate a passport code', () => {

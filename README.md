@@ -24,9 +24,11 @@ Now the name got stuck. _Sorry._ 🤷🏻‍
 
 `germknoedel --help`
 
-## Example
+## Examples
 
 `germknoedel --authority 3533 --gender female 1970-01-01 2019-12-31`
+
+`germknoedel --serial 6068T5DH1`
 
 ## Kudos
 

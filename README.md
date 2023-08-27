@@ -18,7 +18,7 @@ Now the name got stuck. _Sorry._ 🤷🏻‍
 
 ## Installation
 
-`yarn global add germknoedel`
+`npm --global install germknoedel`
 
 ## Usage
 

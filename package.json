@@ -3,7 +3,7 @@
   "dependencies": {
     "chalk": "^5.0.0",
     "command-line-args": "^5.1.1",
-    "command-line-usage": "^6.1.1"
+    "command-line-usage": "^7.0.0"
   },
   "name": "germknoedel",
   "version": "2.1.0",

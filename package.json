@@ -6,7 +6,7 @@
     "command-line-usage": "7.0.1"
   },
   "name": "germknoedel",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "main": "index.js",
   "devDependencies": {
     "mocha": "10.2.0"

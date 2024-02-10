@@ -3,9 +3,14 @@
   "extends": [
     "config:base",
     "npm:unpublishSafe",
+    ":automergeMajor",
     ":disableRateLimiting",
     ":pinVersions",
-    ":semanticCommitsDisabled"    
+    ":semanticCommitsDisabled"
   ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  },
   "labels": ["dependencies"]
 }

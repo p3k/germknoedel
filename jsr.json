@@ -1,0 +1,5 @@
+{
+  "name": "@p3k/germknoedel",
+  "version": "2.2.1",
+  "exports": "./index.js"
+}

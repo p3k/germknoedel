@@ -9,7 +9,7 @@
   "version": "2.2.1",
   "main": "index.js",
   "devDependencies": {
-    "mocha": "10.3.0"
+    "mocha": "10.4.0"
   },
   "scripts": {
     "test": "mocha"

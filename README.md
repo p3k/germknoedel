@@ -30,6 +30,10 @@ Now the name got stuck. _Sorry._ 🤷🏻‍
 
 `germknoedel --serial 6068T5DH1`
 
+`germknoedel --format json`
+
+`germknoedel --query '*'`
+
 ## Kudos
 
 * **A. Beck** for their excellent resources about anything regarding checksum calculation, especially the pages [Deutscher Reisepass](http://www.pruefziffernberechnung.de/R/Reisepass-DE.shtml) and [Behördenkennzahl](http://www.pruefziffernberechnung.de/Begleitdokumente/BKZ.shtml).

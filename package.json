@@ -9,7 +9,7 @@
   "dependencies": {
     "chalk": "5.4.0",
     "command-line-args": "6.0.1",
-    "command-line-usage": "7.0.3"
+    "command-line-usage": "7.0.4"
   },
   "description": "Passport code generator",
   "devDependencies": {

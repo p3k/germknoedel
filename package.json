@@ -7,7 +7,7 @@
     "url": "https://github.com/p3k/germknoedel/issues"
   },
   "dependencies": {
-    "chalk": "5.4.0",
+    "chalk": "6.0.0",
     "command-line-args": "6.0.2",
     "command-line-usage": "7.0.4"
   },

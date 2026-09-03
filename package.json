@@ -13,7 +13,7 @@
   },
   "description": "Passport code generator",
   "devDependencies": {
-    "mocha": "11.8.0"
+    "mocha": "12.0.0"
   },
   "directories": {
     "lib": "lib",

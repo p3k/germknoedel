@@ -8,16 +8,16 @@
     ":semanticCommitsDisabled"
   ],
   "constraints": {
-    "node": "26.10.0"
+    "node": ">=20.19.0"
   },
   "constraintsFiltering": "strict",
   "packageRules": [
     {
-      "matchDepTypes": [
-        "engines"
+      "matchDatasources": [
+        "node-version"
       ],
       "enabled": false,
-      "description": "`engines.node` declares the supported range, so `:pinVersions` must not pin it to whatever the latest Node.js release happens to be"
+      "description": "Node.js versions here describe the range this package supports, so `:pinVersions` must not pin `engines.node`, `constraints.node` or .nvmrc to whatever the latest release happens to be"
     }
   ],
   "osvVulnerabilityAlerts": true,

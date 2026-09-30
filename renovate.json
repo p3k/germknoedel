@@ -8,7 +8,7 @@
     ":semanticCommitsDisabled"
   ],
   "constraints": {
-    "node": ">=16"
+    "node": "26.10.0"
   },
   "packageRules": [
     {

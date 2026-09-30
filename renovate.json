@@ -7,6 +7,25 @@
     ":pinVersions",
     ":semanticCommitsDisabled"
   ],
+  "constraints": {
+    "node": ">=16"
+  },
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "mocha"
+      ],
+      "allowedVersions": "<12",
+      "description": "Mocha 12 uses import attributes (`with { type: \"json\" }`) which Node.js 16 cannot parse"
+    },
+    {
+      "matchPackageNames": [
+        "chalk"
+      ],
+      "allowedVersions": "<6",
+      "description": "Chalk 6 requires Node.js >=22 – see the `engines.node` field in package.json"
+    }
+  ],
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
     "labels": [

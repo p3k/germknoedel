@@ -13,11 +13,11 @@
   "constraintsFiltering": "strict",
   "packageRules": [
     {
-      "matchDatasources": [
-        "node-version"
+      "matchPackageNames": [
+        "node"
       ],
       "enabled": false,
-      "description": "Node.js versions here describe the range this package supports, so `:pinVersions` must not pin `engines.node`, `constraints.node` or .nvmrc to whatever the latest release happens to be"
+      "description": "Node.js versions here describe the range this package supports, so `:pinVersions` must not pin `engines.node`, `constraints.node` or .nvmrc to whatever the latest release happens to be. Matched by package name because these surface under different depTypes – `engines` in package.json, `tool-constraint` for `constraints.node`"
     }
   ],
   "osvVulnerabilityAlerts": true,

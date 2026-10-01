@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Releases prior to this file's existence aren't individually documented here; see [GitHub Releases](https://github.com/p3k/germknoedel/releases) for the historical list.
 
+## [4.0.1] - 2026-10-01
+
+### Fixed
+
+- Fixed a crash for anyone importing the library (`calculate`/`validate`) from JSR, Deno, or any other remote module loader. `authorities.json` was located via `__dirname`, which only resolves for modules loaded from local disk; every real `jsr:@p3k/germknoedel` consumer loads the module over `https://` instead, where that path construction throws. ([#184](https://github.com/p3k/germknoedel/pull/184))
+
+### Changed
+
+- Documented the remaining exported types in `index.d.ts` (`Authority`, `PassportCodeOptions`, `ValidateInput`, `ValidatedArgs`, and `calculate`'s second call signature) – only `calculate` and `validate` themselves had doc comments before. ([#182](https://github.com/p3k/germknoedel/pull/182))
+
 ## [4.0.0] - 2026-10-01
 
 ### Changed

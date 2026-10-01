@@ -1,6 +1,6 @@
 {
   "name": "@p3k/germknoedel",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "exports": "./index.js",
   "publish": {
     "include": [

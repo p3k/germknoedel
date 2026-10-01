@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { calculate, validate } from '../index.js';
-import { query } from '../lib/authorities.js';
+import { convert, query } from '../lib/authorities.js';
 
 describe('calculate', () => {
   it('should generate a passport code', () => {
@@ -90,5 +90,39 @@ describe('query', () => {
     assert.equal(results.length, 2);
     assert.equal(results[0].id, '3533');
     assert.equal(results[1].id, 'c4vw');
+  });
+});
+
+describe('convert', () => {
+  const line = ['0302', 'PA', '1997', '18209', 'Stadt', 'Bad Doberan', '', 'DBR'].join('\t');
+
+  it('should convert tab separated authority data', () => {
+    const results = convert(line);
+    assert.equal(results.length, 1);
+    assert.deepEqual(results[0], {
+      id: '0302',
+      documentType: 'PA',
+      year: '1997',
+      zip: '18209',
+      type: 'Stadt',
+      name: 'Bad Doberan',
+      url: '',
+      licenseTag: 'DBR'
+    });
+  });
+
+  it('should lowercase the authority ID', () => {
+    const results = convert(['C4VW', 'RP', '', '', '', 'Wien', '', ''].join('\t'));
+    assert.equal(results[0].id, 'c4vw');
+  });
+
+  it('should skip comments and blank lines', () => {
+    const results = convert(`#!/usr/bin/env bash\n#Dateiname:\tBKZ.sh\n\n${line}\n\n`);
+    assert.equal(results.length, 1);
+  });
+
+  it('should skip lines without an ID or a name', () => {
+    assert.equal(convert('\t\t\t\t\t\t\t').length, 0);
+    assert.equal(convert(['0302', 'PA', '', '', '', '', '', ''].join('\t')).length, 0);
   });
 });

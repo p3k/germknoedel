@@ -11,6 +11,10 @@ jobs:
   publish:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      id-token: write # Used for tokenless publishing to JSR.
+
     steps:
       - uses: actions/checkout@v7.0.1
 
@@ -25,7 +29,19 @@ jobs:
       - name: Test
         run: npm test
 
-      - name: Publish
+      - name: Publish to npm
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
+      - name: Sync jsr.json's version with package.json
+        run: |
+          node -e "
+            const fs = require('node:fs');
+            const jsr = JSON.parse(fs.readFileSync('jsr.json'));
+            jsr.version = JSON.parse(fs.readFileSync('package.json')).version;
+            fs.writeFileSync('jsr.json', JSON.stringify(jsr, null, 2) + '\n');
+          "
+
+      - name: Publish to JSR
+        run: npx jsr publish --allow-dirty

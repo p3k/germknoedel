@@ -1,5 +1,8 @@
 {
   "name": "@p3k/germknoedel",
-  "version": "2.3.0",
-  "exports": "./index.js"
+  "version": "3.1.0",
+  "exports": "./index.js",
+  "publish": {
+    "include": ["LICENSE", "README.md", "index.js", "bin", "lib", "authorities.json"]
+  }
 }

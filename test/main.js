@@ -85,6 +85,13 @@ describe('validate', () => {
     assert.throws(() => validate({ gender: 'invalid date' }), /unknown/i);
   });
 
+  // GENDERS is a plain object, so `gender in GENDERS` used to match any
+  // inherited Object.prototype member name too.
+  it('should throw an error if gender is an inherited object member name', () => {
+    assert.throws(() => validate({ gender: 'toString' }), /unknown/i);
+    assert.throws(() => validate({ gender: 'hasOwnProperty' }), /unknown/i);
+  });
+
   it('should throw an error if authority is invalid', () => {
     assert.throws(() => validate({ authority: 'invalid date' }), /invalid authority/i);
   });

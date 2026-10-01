@@ -36,5 +36,5 @@ Now the name got stuck. _Sorry._ 🤷🏻‍
 
 ## Kudos
 
-* **A. Beck** for their excellent resources about anything regarding checksum calculation, especially the pages [Deutscher Reisepass](http://www.pruefziffernberechnung.de/R/Reisepass-DE.shtml) and [Behördenkennzahl](http://www.pruefziffernberechnung.de/Begleitdokumente/BKZ.shtml).
+* **A. Beck** for their excellent resources about anything regarding checksum calculation, especially the pages [Deutscher Reisepass](https://web.archive.org/web/20250123061642/http://www.pruefziffernberechnung.de/R/Reisepass-DE.shtml) and [Behördenkennzahl](https://web.archive.org/web/20250119185525/http://www.pruefziffernberechnung.de/Begleitdokumente/BKZ.shtml). The original site is gone; both links point at the last good Wayback Machine snapshot.
 * **Pi’s World** for additional information about the [checksum for the latest German passport](https://pinetik.blogspot.com/2011/03/prufziffer-fur-neuen-reisepass.html).

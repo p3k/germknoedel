@@ -13,7 +13,7 @@ jobs:
 
     permissions:
       contents: read
-      id-token: write # Used for tokenless publishing to JSR.
+      id-token: write # Used for tokenless publishing to both npm and JSR.
 
     steps:
       - uses: actions/checkout@v7.0.1
@@ -31,8 +31,6 @@ jobs:
 
       - name: Publish to npm
         run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
       - name: Publish to JSR
         run: npx jsr publish

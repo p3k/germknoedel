@@ -19,9 +19,13 @@ jobs:
           node-version: '24.21.0'
           registry-url: https://registry.npmjs.org/
 
-      - name: Build and publish
-        run: |
-          npm ci
-          npm publish
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Publish
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}

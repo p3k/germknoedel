@@ -25,6 +25,7 @@
   "files": [
     "authorities.json",
     "bin",
+    "index.d.ts",
     "index.js",
     "lib"
   ],
@@ -43,7 +44,8 @@
   },
   "scripts": {
     "test": "mocha",
-    "version": "node -e \"const fs=require('node:fs');const jsr=JSON.parse(fs.readFileSync('jsr.json'));jsr.version=process.env.npm_package_version;fs.writeFileSync('jsr.json',JSON.stringify(jsr,null,2)+'\\n')\" && git add jsr.json"
+    "version": "node -e \"const fs=require('node:fs');const jsr=JSON.parse(fs.readFileSync('jsr.json'));jsr.version=process.env.npm_package_version;fs.writeFileSync('jsr.json',JSON.stringify(jsr,null,2)+'\\n')\" && git add jsr.json",
+    "deno": "deno run --allow-read --allow-env bin/germknoedel.js"
   },
   "type": "module",
   "version": "3.1.0"

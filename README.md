@@ -20,6 +20,8 @@ Now the name got stuck. _Sorry._ 🤷🏻‍
 
 `npm --global install germknoedel`
 
+Also published on [JSR](https://jsr.io/@p3k/germknoedel) for use from Deno or Bun: `deno add jsr:@p3k/germknoedel`, or import directly via `jsr:@p3k/germknoedel`.
+
 ## Usage
 
 `germknoedel --help`
@@ -33,6 +35,37 @@ Now the name got stuck. _Sorry._ 🤷🏻‍
 `germknoedel --format json`
 
 `germknoedel --query '*'`
+
+## Library usage
+
+`calculate` and `validate` are also exported for use from JavaScript directly – `validate` fills in defaults and normalizes things like a human-readable gender ("female") into the single-character code `calculate` expects:
+
+```js
+import { calculate, validate } from 'germknoedel';
+
+const { serial, gender, dateOfBirth, dateOfExpiry } = validate({
+  serial: '3533IIY6Z',
+  gender: 'female',
+  dateOfBirth: '1970-01-01',
+  dateOfExpiry: '2019-12-31'
+});
+
+calculate(serial, gender, dateOfBirth, dateOfExpiry);
+// → "3533IIY6Z3D<<7001017F1912319<<<<<<<<<<<<<<<8"
+```
+
+## Runtime compatibility
+
+Tested directly under Node.js, Deno and Bun – the CLI and the library exports both run correctly on all three.
+
+Bun needs no extra flags. Deno, secure by default, needs permissions granted explicitly:
+
+- Importing the library (`calculate`, `validate`) only needs `--allow-read`, to load the bundled authority data.
+- Running the CLI additionally needs `--allow-env` – required by `chalk`'s own CI-environment detection, not by anything in this package – and `--allow-net` too, if using `--update`.
+
+```sh
+deno run --allow-read --allow-env bin/germknoedel.js 1970-01-01 2019-12-31
+```
 
 ## Kudos
 

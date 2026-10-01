@@ -1,3 +1,5 @@
 #!/usr/bin/env node
 
-import '../lib/main.js';
+import { run } from '../lib/main.js';
+
+run();

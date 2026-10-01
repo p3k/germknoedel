@@ -22,6 +22,12 @@
   "engines": {
     "node": ">=20.19.0"
   },
+  "files": [
+    "authorities.json",
+    "bin",
+    "index.js",
+    "lib"
+  ],
   "homepage": "https://github.com/p3k/germknoedel#readme",
   "keywords": [
     "passport",

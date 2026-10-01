@@ -25,6 +25,7 @@
   "files": [
     "authorities.json",
     "bin",
+    "CHANGELOG.md",
     "index.d.ts",
     "index.js",
     "lib"

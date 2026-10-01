@@ -3,6 +3,6 @@
   "version": "3.1.0",
   "exports": "./index.js",
   "publish": {
-    "include": ["LICENSE", "README.md", "index.js", "index.d.ts", "bin", "lib", "authorities.json"]
+    "include": ["LICENSE", "README.md", "CHANGELOG.md", "index.js", "index.d.ts", "bin", "lib", "authorities.json"]
   }
 }

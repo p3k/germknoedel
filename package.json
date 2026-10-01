@@ -42,7 +42,8 @@
     "url": "git+https://github.com/p3k/germknoedel.git"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "version": "node -e \"const fs=require('node:fs');const jsr=JSON.parse(fs.readFileSync('jsr.json'));jsr.version=process.env.npm_package_version;fs.writeFileSync('jsr.json',JSON.stringify(jsr,null,2)+'\\n')\" && git add jsr.json"
   },
   "type": "module",
   "version": "3.1.0"

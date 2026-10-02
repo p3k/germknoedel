@@ -1,8 +1,8 @@
 import chalk from 'chalk';
-import commandLineUsage from 'command-line-usage';
-import { write } from './feedback.js';
+import commandLineUsage, { type OptionDefinition, type Section } from 'command-line-usage';
+import { write } from './feedback.ts';
 
-export default args => {
+export default (args: OptionDefinition[]): void => {
   const usage = commandLineUsage([
     {
       header: 'Name'.toUpperCase(),
@@ -42,7 +42,7 @@ export default args => {
         germknoedel --update
         ${chalk.gray('Update the known list of authorities.')}`
     },
-    { header: 'Options'.toUpperCase(), optionList: args }
+    { header: 'Options'.toUpperCase(), optionList: args } as Section
   ]);
 
   write(usage);

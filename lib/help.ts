@@ -1,8 +1,8 @@
 import chalk from 'chalk';
-import commandLineUsage from 'command-line-usage';
-import { write } from './feedback.js';
+import commandLineUsage, { type OptionDefinition } from 'command-line-usage';
+import { write } from './feedback.ts';
 
-export default args => {
+export default (args: OptionDefinition[]): void => {
   const usage = commandLineUsage([
     {
       header: 'Name'.toUpperCase(),

@@ -1,7 +1,7 @@
 {
   "author": "Tobi Schäfer <interface@p3k.org>",
   "bin": {
-    "germknoedel": "bin/germknoedel.js"
+    "germknoedel": "dist/bin/germknoedel.js"
   },
   "bugs": {
     "url": "https://github.com/p3k/germknoedel/issues"
@@ -13,7 +13,15 @@
   },
   "description": "Passport code generator",
   "devDependencies": {
-    "mocha": "12.0.2"
+    "@eslint/js": "10.0.1",
+    "@types/command-line-args": "5.2.3",
+    "@types/command-line-usage": "5.0.4",
+    "@types/mocha": "10.0.10",
+    "@types/node": "26.6.3",
+    "eslint": "10.11.0",
+    "mocha": "12.0.2",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.0"
   },
   "directories": {
     "lib": "lib",
@@ -23,12 +31,8 @@
     "node": ">=20.19.0"
   },
   "files": [
-    "authorities.json",
-    "bin",
     "CHANGELOG.md",
-    "index.d.ts",
-    "index.js",
-    "lib"
+    "dist"
   ],
   "homepage": "https://github.com/p3k/germknoedel#readme",
   "keywords": [
@@ -37,17 +41,28 @@
     "command-line"
   ],
   "license": "LGPL-3.0-or-later",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "name": "germknoedel",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/p3k/germknoedel.git"
   },
   "scripts": {
-    "test": "mocha",
+    "build": "tsc && cp authorities.json package.json dist/",
+    "test": "npm run build && mocha dist/test/main.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
     "version": "node -e \"const fs=require('node:fs');const jsr=JSON.parse(fs.readFileSync('jsr.json'));jsr.version=process.env.npm_package_version;fs.writeFileSync('jsr.json',JSON.stringify(jsr,null,2)+'\\n')\" && git add jsr.json",
-    "deno": "deno run --allow-read --allow-env bin/germknoedel.js"
+    "deno": "deno run --allow-read --allow-env bin/germknoedel.ts"
   },
+  "types": "dist/index.d.ts",
   "type": "module",
   "version": "4.0.1"
 }

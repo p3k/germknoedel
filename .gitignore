@@ -1,6 +1,9 @@
 # Claude Code personal settings
 .claude/settings.local.json
 
+# TypeScript build output
+dist
+
 # Logs
 logs
 *.log

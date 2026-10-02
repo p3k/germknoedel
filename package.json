@@ -13,12 +13,15 @@
   },
   "description": "Passport code generator",
   "devDependencies": {
+    "@eslint/js": "10.0.1",
     "@types/command-line-args": "5.2.3",
     "@types/command-line-usage": "5.0.4",
     "@types/mocha": "10.0.10",
     "@types/node": "26.6.3",
+    "eslint": "10.11.0",
     "mocha": "12.0.2",
-    "typescript": "7.0.2"
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.0"
   },
   "directories": {
     "lib": "lib",
@@ -55,6 +58,7 @@
     "build": "tsc && cp authorities.json package.json dist/",
     "test": "npm run build && mocha dist/test/main.js",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
     "version": "node -e \"const fs=require('node:fs');const jsr=JSON.parse(fs.readFileSync('jsr.json'));jsr.version=process.env.npm_package_version;fs.writeFileSync('jsr.json',JSON.stringify(jsr,null,2)+'\\n')\" && git add jsr.json",
     "deno": "deno run --allow-read --allow-env bin/germknoedel.ts"
   },

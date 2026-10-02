@@ -34,7 +34,7 @@ const url = 'http://www.pruefziffernberechnung.de/Begleitdokumente/BKZ.sh.gz';
 const file = __dirname + '/../authorities.json';
 
 const query = (query: string | null): Authority[] => {
-  if (query === null) throw 'Invalid query';
+  if (query === null) throw new Error('Invalid query');
   if (query === '*') query = '';
 
   return authorities
@@ -105,7 +105,7 @@ const download = (url: string, redirectsLeft = 5): Promise<Buffer> => {
         if (statusCode !== undefined && [301, 302, 303, 307, 308].includes(statusCode) && headers.location) {
           response.resume();
           if (redirectsLeft === 0) {
-            reject(`Too many redirects fetching ${url}`);
+            reject(new Error(`Too many redirects fetching ${url}`));
             return;
           }
           resolve(download(new URL(headers.location, url).toString(), redirectsLeft - 1));
@@ -116,7 +116,7 @@ const download = (url: string, redirectsLeft = 5): Promise<Buffer> => {
         // which reported “incorrect header check” instead of naming the status.
         if (statusCode !== 200) {
           response.resume();
-          reject(`Fetching ${url} failed with status ${statusCode}`);
+          reject(new Error(`Fetching ${url} failed with status ${statusCode}`));
           return;
         }
 

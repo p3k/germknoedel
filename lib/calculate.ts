@@ -18,7 +18,7 @@ const checksum = (series: string): number => {
     Array.from(series).reduce((checksum, char, index) => {
       // index % 3 is always 0, 1, or 2 – always in range for this fixed 3-tuple.
       const weight = weights[index % 3 as 0 | 1 | 2];
-      return (checksum += weight * number(char));
+      return checksum + weight * number(char);
     }, 0) % 10
   );
 };

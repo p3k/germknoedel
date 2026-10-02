@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import commandLineUsage, { type OptionDefinition, type Section } from 'command-line-usage';
+import commandLineUsage, { type OptionDefinition } from 'command-line-usage';
 import { write } from './feedback.ts';
 
 export default (args: OptionDefinition[]): void => {
@@ -42,7 +42,7 @@ export default (args: OptionDefinition[]): void => {
         germknoedel --update
         ${chalk.gray('Update the known list of authorities.')}`
     },
-    { header: 'Options'.toUpperCase(), optionList: args } as Section
+    { header: 'Options'.toUpperCase(), optionList: args }
   ]);
 
   write(usage);

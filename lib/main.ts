@@ -12,7 +12,7 @@ import { validate, getGender } from './validate.ts';
 
 import { __dirname } from './util.ts';
 
-const pkg = JSON.parse(fs.readFileSync(__dirname + '/../package.json', 'utf8'));
+const pkg = JSON.parse(fs.readFileSync(__dirname + '/../package.json', 'utf8')) as { version: string };
 
 interface Args {
   authority?: string;
@@ -107,7 +107,7 @@ export const run = (argv: string[] = process.argv.slice(2)): void => {
     if (!args.format) args.format = 'console';
 
     if (!['console', 'json', 'plain'].includes(args.format)) {
-      throw 'Invalid format';
+      throw new Error('Invalid format');
     }
 
     if (args.help) {
@@ -115,14 +115,14 @@ export const run = (argv: string[] = process.argv.slice(2)): void => {
     } else if (args.version) {
       write(pkg.version);
     } else if (args.update) {
-      update();
+      void update();
     } else if (typeof args.query !== 'undefined') {
       queryAuthorities(args);
     } else {
       calculateCode(args);
     }
-  } catch (message) {
-    fail(message);
+  } catch (error) {
+    fail(error instanceof Error ? error.message : error);
     help(mainArgs);
   }
 };

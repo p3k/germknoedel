@@ -43,7 +43,7 @@ export const validate = (args: ValidateInput = {}): ValidatedArgs => {
   let dateOfBirth: Date;
   if (validated.dateOfBirth) {
     dateOfBirth = new Date(validated.dateOfBirth);
-    if (isNaN(dateOfBirth.getTime())) throw 'Invalid date of birth';
+    if (isNaN(dateOfBirth.getTime())) throw new Error('Invalid date of birth');
   } else {
     dateOfBirth = randomDate();
     dateOfBirth.setUTCFullYear(new Date().getUTCFullYear() + randomInt(100) - 100);
@@ -52,8 +52,8 @@ export const validate = (args: ValidateInput = {}): ValidatedArgs => {
   let dateOfExpiry: Date;
   if (validated.dateOfExpiry) {
     dateOfExpiry = new Date(validated.dateOfExpiry);
-    if (isNaN(dateOfExpiry.getTime())) throw 'Invalid date of expiry';
-    if (dateOfExpiry < dateOfBirth) throw 'Date of expiry is before date of birth';
+    if (isNaN(dateOfExpiry.getTime())) throw new Error('Invalid date of expiry');
+    if (dateOfExpiry < dateOfBirth) throw new Error('Date of expiry is before date of birth');
   } else {
     dateOfExpiry = randomDate();
     dateOfExpiry.setUTCFullYear(new Date().getUTCFullYear() + randomInt(10));
@@ -66,7 +66,7 @@ export const validate = (args: ValidateInput = {}): ValidatedArgs => {
     gender = GENDERS.unspecified;
   } else if (isGenderKey(validated.gender)) {
     gender = GENDERS[validated.gender];
-  } else throw 'Unknown gender';
+  } else throw new Error('Unknown gender');
 
   let serial: string;
   let authorityId: string;
@@ -85,9 +85,9 @@ export const validate = (args: ValidateInput = {}): ValidatedArgs => {
   // types or eras in the source data) – `find` returns whichever comes first.
   const authority = authorities.find(a => a.id === authorityId);
 
-  if (!authority) throw 'Invalid authority';
+  if (!authority) throw new Error('Invalid authority');
 
-  if (serial.length !== 9) throw 'Invalid length of serial number';
+  if (serial.length !== 9) throw new Error('Invalid length of serial number');
 
   return { serial, gender, dateOfBirth, dateOfExpiry, authority };
 };

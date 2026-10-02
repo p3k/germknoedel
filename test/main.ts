@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import { execFile, execFileSync } from 'node:child_process';
 import { promisify } from 'node:util';
 import { calculate, validate } from '../index.ts';
-import { convert, query } from '../lib/authorities.ts';
+import { convert, query, type Authority } from '../lib/authorities.ts';
 import help from '../lib/help.ts';
 import { run } from '../lib/main.ts';
 import { write, writeJson, success, warn, fail } from '../lib/feedback.ts';
@@ -37,10 +37,10 @@ const runCliConcurrently = (args: string[], envs: NodeJS.ProcessEnv[]): Promise<
 // rather than importing them into a child process too, since neither has any
 // top-level side effect that makes that unsafe.
 const captureStdout = (fn: () => void): string => {
-  const original = process.stdout.write;
+  const original = process.stdout.write.bind(process.stdout);
   let output = '';
   process.stdout.write = (chunk: Uint8Array | string): boolean => {
-    output += chunk;
+    output += typeof chunk === 'string' ? chunk : Buffer.from(chunk).toString('utf8');
     return true;
   };
   try {
@@ -238,7 +238,7 @@ describe('cli', () => {
   });
 
   it('should print the version from package.json', () => {
-    const { version } = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+    const { version } = JSON.parse(fs.readFileSync('./package.json', 'utf8')) as { version: string };
     assert.equal(captureStdout(() => run(['--version'])).trim(), version);
   });
 
@@ -249,9 +249,9 @@ describe('cli', () => {
   });
 
   it('should list matching authorities as JSON', () => {
-    const results = JSON.parse(captureStdout(() => run(['--query', 'wien', '--format', 'json'])));
+    const results = JSON.parse(captureStdout(() => run(['--query', 'wien', '--format', 'json']))) as Authority[];
     assert.equal(results.length, 2);
-    assert.equal(results[0].id, '3533');
+    assert.equal(results[0]!.id, '3533');
   });
 
   it('should output plain format as just the code', () => {
@@ -260,7 +260,11 @@ describe('cli', () => {
   });
 
   it('should output json format with the code and display dates', () => {
-    const result = JSON.parse(captureStdout(() => run(['--format', 'json', '1970-01-01', '2019-12-31'])));
+    const result = JSON.parse(captureStdout(() => run(['--format', 'json', '1970-01-01', '2019-12-31']))) as {
+      code: string;
+      dateOfBirth: string;
+      dateOfExpiry: string;
+    };
     assert.match(result.code, /D<<7001017X1912319</);
     assert.equal(result.dateOfBirth, 'Thu Jan 01 1970');
     assert.equal(result.dateOfExpiry, 'Tue Dec 31 2019');

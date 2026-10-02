@@ -39,6 +39,13 @@
   ],
   "license": "LGPL-3.0-or-later",
   "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "name": "germknoedel",
   "repository": {
     "type": "git",

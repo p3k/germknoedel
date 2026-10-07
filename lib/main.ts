@@ -1,20 +1,34 @@
 import fs from 'node:fs';
 
 import chalk from 'chalk';
-import commandLineArgs from 'command-line-args';
+import commandLineArgs, { type OptionDefinition } from 'command-line-args';
 
-import calculate from './calculate.js';
-import { toDisplayDate } from './date.js';
-import { fail, write, writeJson } from './feedback.js';
-import help from './help.js';
-import { query, update } from './authorities.js';
-import { validate, getGender } from './validate.js';
+import calculate from './calculate.ts';
+import { toDisplayDate } from './date.ts';
+import { fail, write, writeJson } from './feedback.ts';
+import help from './help.ts';
+import { query, update } from './authorities.ts';
+import { validate, getGender } from './validate.ts';
 
-import { __dirname } from './util.js';
+import { __dirname } from './util.ts';
 
-const module = JSON.parse(fs.readFileSync(__dirname + '/../package.json'));
+const pkg = JSON.parse(fs.readFileSync(__dirname + '/../package.json', 'utf8')) as { version: string };
 
-const mainArgs = [
+interface Args {
+  authority?: string;
+  gender?: string;
+  format?: string;
+  help?: boolean;
+  query?: string;
+  serial?: string;
+  update?: boolean;
+  version?: boolean;
+  dateOfBirth?: string;
+  dateOfExpiry?: string;
+  _unknown?: string[];
+}
+
+const mainArgs: (OptionDefinition & { description: string })[] = [
   { name: 'authority', alias: 'a', type: String, description: 'The ID of the issuing authority' },
   { name: 'gender', alias: 'g', type: String, description: 'Either male, female or unspecified (default)' },
   {
@@ -35,8 +49,8 @@ const mainArgs = [
   { name: 'version', alias: 'v', type: Boolean, description: 'Output the version string' }
 ];
 
-const queryAuthorities = args => {
-  const authorities = query(args.query);
+const queryAuthorities = (args: Args): void => {
+  const authorities = query(args.query ?? null);
   if (args.format === 'json') {
     writeJson(authorities);
   } else {
@@ -44,7 +58,7 @@ const queryAuthorities = args => {
   }
 };
 
-const calculateCode = args => {
+const calculateCode = (args: Args): void => {
   const { serial, gender, dateOfBirth, dateOfExpiry, authority } = validate(args);
   const code = calculate(serial, gender, dateOfBirth, dateOfExpiry);
 
@@ -58,7 +72,7 @@ const calculateCode = args => {
   };
 
   if (args.format === 'json') {
-    writeJson(result, null, '  ');
+    writeJson(result);
   } else if (args.format === 'plain') {
     write(code);
   } else {
@@ -81,8 +95,8 @@ const calculateCode = args => {
 // without acting on the real process.argv, which is what let the rest of it
 // (queryAuthorities, calculateCode) be tested directly, in-process, instead
 // of only through a spawned process.
-export const run = (argv = process.argv.slice(2)) => {
-  const args = commandLineArgs(mainArgs, { argv, stopAtFirstUnknown: true });
+export const run = (argv: string[] = process.argv.slice(2)): void => {
+  const args = commandLineArgs(mainArgs, { argv, stopAtFirstUnknown: true }) as Args;
   const unknown = args._unknown || [];
   delete args._unknown;
 
@@ -93,22 +107,22 @@ export const run = (argv = process.argv.slice(2)) => {
     if (!args.format) args.format = 'console';
 
     if (!['console', 'json', 'plain'].includes(args.format)) {
-      throw 'Invalid format';
+      throw new Error('Invalid format');
     }
 
     if (args.help) {
       help(mainArgs);
     } else if (args.version) {
-      write(module.version);
+      write(pkg.version);
     } else if (args.update) {
-      update();
+      void update();
     } else if (typeof args.query !== 'undefined') {
       queryAuthorities(args);
     } else {
       calculateCode(args);
     }
-  } catch (message) {
-    fail(message);
+  } catch (error) {
+    fail(error instanceof Error ? error.message : error);
     help(mainArgs);
   }
 };

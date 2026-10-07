@@ -12,7 +12,7 @@ const displayFormat = new Intl.DateTimeFormat('en-US', {
 });
 
 // The compact form embedded in the code itself, e.g. "700101".
-export const toCodeDate = date => {
+export const toCodeDate = (date: Date | string | number): string => {
   date = new Date(date);
 
   return [
@@ -25,4 +25,5 @@ export const toCodeDate = date => {
 // The human-readable form shown to the user, e.g. "Thu Jan 01 1970" – the same
 // shape as Date.prototype.toDateString(), but anchored in UTC instead of
 // local time.
-export const toDisplayDate = date => displayFormat.format(new Date(date)).replace(/,/g, '');
+export const toDisplayDate = (date: Date | string | number): string =>
+  displayFormat.format(new Date(date)).replace(/,/g, '');

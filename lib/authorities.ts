@@ -2,10 +2,24 @@ import fs from 'node:fs';
 import http from 'node:http';
 import https from 'node:https';
 import zlib from 'node:zlib';
+import type { IncomingMessage } from 'node:http';
 
-import authorities from '../authorities.json' with { type: 'json' };
-import { success, fail, write } from './feedback.js';
-import { __dirname } from './util.js';
+import authoritiesData from '../authorities.json' with { type: 'json' };
+import { success, fail, write } from './feedback.ts';
+import { __dirname } from './util.ts';
+
+export interface Authority {
+  id: string;
+  documentType: string;
+  year: string;
+  zip: string;
+  type: string;
+  name: string;
+  url: string;
+  licenseTag: string;
+}
+
+const authorities = authoritiesData as Authority[];
 
 // This source is currently dead – the path returns 404 and the domain redirects
 // to an unrelated site – and no replacement publishes the data in this layout.
@@ -19,8 +33,8 @@ const url = 'http://www.pruefziffernberechnung.de/Begleitdokumente/BKZ.sh.gz';
 // so it must not be used for the read path above.
 const file = __dirname + '/../authorities.json';
 
-const query = query => {
-  if (query === null) throw 'Invalid query';
+const query = (query: string | null): Authority[] => {
+  if (query === null) throw new Error('Invalid query');
   if (query === '*') query = '';
 
   return authorities
@@ -28,7 +42,7 @@ const query = query => {
       if (!authority.name || !authority.id) return false;
       return authority.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
     })
-    .reduce((list, authority) => {
+    .reduce<Authority[]>((list, authority) => {
       if (
         !list.some(availableAuthority => {
           return availableAuthority.id === authority.id && availableAuthority.name === authority.name;
@@ -53,11 +67,11 @@ const query = query => {
     });
 };
 
-const convert = text => {
+const convert = (text: string): Authority[] => {
   return text
     .split('\n')
     .filter(line => line && line.trim() && !line.startsWith('#'))
-    .reduce((list, item) => {
+    .reduce<Authority[]>((list, item) => {
       const parts = item.split('\t');
 
       const id = parts[0];
@@ -66,13 +80,13 @@ const convert = text => {
       if (id && name) {
         list.push({
           id: id.toLowerCase(),
-          documentType: parts[1],
-          year: parts[2],
-          zip: parts[3],
-          type: parts[4],
+          documentType: parts[1] ?? '',
+          year: parts[2] ?? '',
+          zip: parts[3] ?? '',
+          type: parts[4] ?? '',
           name: name,
-          url: parts[6],
-          licenseTag: parts[7]
+          url: parts[6] ?? '',
+          licenseTag: parts[7] ?? ''
         });
       }
 
@@ -80,18 +94,18 @@ const convert = text => {
     }, []);
 };
 
-const download = (url, redirectsLeft = 5) => {
+const download = (url: string, redirectsLeft = 5): Promise<Buffer> => {
   return new Promise((resolve, reject) => {
     const client = new URL(url).protocol === 'http:' ? http : https;
 
     client
-      .get(url, response => {
+      .get(url, (response: IncomingMessage) => {
         const { statusCode, headers } = response;
 
-        if ([301, 302, 303, 307, 308].includes(statusCode) && headers.location) {
+        if (statusCode !== undefined && [301, 302, 303, 307, 308].includes(statusCode) && headers.location) {
           response.resume();
           if (redirectsLeft === 0) {
-            reject(`Too many redirects fetching ${url}`);
+            reject(new Error(`Too many redirects fetching ${url}`));
             return;
           }
           resolve(download(new URL(headers.location, url).toString(), redirectsLeft - 1));
@@ -102,14 +116,14 @@ const download = (url, redirectsLeft = 5) => {
         // which reported “incorrect header check” instead of naming the status.
         if (statusCode !== 200) {
           response.resume();
-          reject(`Fetching ${url} failed with status ${statusCode}`);
+          reject(new Error(`Fetching ${url} failed with status ${statusCode}`));
           return;
         }
 
-        const chunks = [];
+        const chunks: Buffer[] = [];
 
         response
-          .on('data', chunk => {
+          .on('data', (chunk: Buffer) => {
             chunks.push(chunk);
           })
           .on('error', reject)
@@ -121,7 +135,7 @@ const download = (url, redirectsLeft = 5) => {
   });
 };
 
-const update = async () => {
+const update = async (): Promise<void> => {
   write('Fetching authority data from', url);
 
   try {
@@ -133,7 +147,7 @@ const update = async () => {
     fs.writeFileSync(file, JSON.stringify(data));
     success(`Done, ${data.length} authorities.`);
   } catch (error) {
-    fail(error.message || error);
+    fail(error instanceof Error ? error.message : error);
   }
 };
 

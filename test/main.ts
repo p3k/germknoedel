@@ -2,19 +2,19 @@ import assert from 'assert';
 import fs from 'node:fs';
 import { execFile, execFileSync } from 'node:child_process';
 import { promisify } from 'node:util';
-import { calculate, validate } from '../index.js';
-import { convert, query } from '../lib/authorities.js';
-import help from '../lib/help.js';
-import { run } from '../lib/main.js';
-import { write, writeJson, success, warn, fail } from '../lib/feedback.js';
+import { calculate, validate } from '../index.ts';
+import { convert, query, type Authority } from '../lib/authorities.ts';
+import help from '../lib/help.ts';
+import { run } from '../lib/main.ts';
+import { write, writeJson, success, warn, fail } from '../lib/feedback.ts';
 
 const execFileAsync = promisify(execFile);
 
 // lib/main.js parses process.argv and acts on it as soon as it is imported,
 // so it cannot be imported directly in a test – it has to be run as the
 // actual CLI binary, in a child process, just like a real user would.
-const runCli = (args, env = {}) =>
-  execFileSync(process.execPath, ['bin/germknoedel.js', ...args], {
+const runCli = (args: string[], env: NodeJS.ProcessEnv = {}): string =>
+  execFileSync(process.execPath, ['dist/bin/germknoedel.js', ...args], {
     env: { ...process.env, ...env }
   }).toString();
 
@@ -24,10 +24,10 @@ const runCli = (args, env = {}) =>
 // awaiting them in sequence, is what actually matters for keeping that cost
 // from multiplying; the irreducible single-spawn floor elsewhere is just the
 // price of testing a real binary instead of an in-process function.
-const runCliConcurrently = (args, envs) =>
+const runCliConcurrently = (args: string[], envs: NodeJS.ProcessEnv[]): Promise<string[]> =>
   Promise.all(
     envs.map(env =>
-      execFileAsync(process.execPath, ['bin/germknoedel.js', ...args], {
+      execFileAsync(process.execPath, ['dist/bin/germknoedel.js', ...args], {
         env: { ...process.env, ...env }
       }).then(({ stdout }) => stdout)
     )
@@ -36,11 +36,11 @@ const runCliConcurrently = (args, envs) =>
 // feedback.js and help.js write straight to process.stdout.write; capture it
 // rather than importing them into a child process too, since neither has any
 // top-level side effect that makes that unsafe.
-const captureStdout = fn => {
-  const original = process.stdout.write;
+const captureStdout = (fn: () => void): string => {
+  const original = process.stdout.write.bind(process.stdout);
   let output = '';
-  process.stdout.write = chunk => {
-    output += chunk;
+  process.stdout.write = (chunk: Uint8Array | string): boolean => {
+    output += typeof chunk === 'string' ? chunk : Buffer.from(chunk).toString('utf8');
     return true;
   };
   try {
@@ -63,9 +63,9 @@ describe('calculate', () => {
   // observing itself from two timezones at once.
   it('should not depend on the host timezone', async () => {
     const script =
-      "import('./lib/calculate.js').then(m => console.log(m.default('abcd56789', 'X', new Date('1970-01-01'), new Date('2019-12-31'))))";
+      "import('./dist/lib/calculate.js').then(m => console.log(m.default('abcd56789', 'X', new Date('1970-01-01'), new Date('2019-12-31'))))";
 
-    const runScript = TZ =>
+    const runScript = (TZ: string): Promise<string> =>
       execFileAsync(process.execPath, ['-e', script], { env: { ...process.env, TZ } }).then(({ stdout }) =>
         stdout.trim()
       );
@@ -167,8 +167,8 @@ describe('query', () => {
     const results = query('wien');
     assert.equal(results.constructor, Array);
     assert.equal(results.length, 2);
-    assert.equal(results[0].id, '3533');
-    assert.equal(results[1].id, 'c4vw');
+    assert.equal(results[0]!.id, '3533');
+    assert.equal(results[1]!.id, 'c4vw');
   });
 });
 
@@ -178,7 +178,7 @@ describe('convert', () => {
   it('should convert tab separated authority data', () => {
     const results = convert(line);
     assert.equal(results.length, 1);
-    assert.deepEqual(results[0], {
+    assert.deepEqual(results[0]!, {
       id: '0302',
       documentType: 'PA',
       year: '1997',
@@ -192,7 +192,7 @@ describe('convert', () => {
 
   it('should lowercase the authority ID', () => {
     const results = convert(['C4VW', 'RP', '', '', '', 'Wien', '', ''].join('\t'));
-    assert.equal(results[0].id, 'c4vw');
+    assert.equal(results[0]!.id, 'c4vw');
   });
 
   it('should skip comments and blank lines', () => {
@@ -215,10 +215,13 @@ describe('cli', () => {
   // needs separate spawned processes rather than an in-process run() call.
   it('should print dates that agree with the code, in any timezone', async () => {
     const TZs = ['UTC', 'America/Los_Angeles', 'Pacific/Kiritimati'];
-    const outputs = await runCliConcurrently(['1970-01-01', '2019-12-31'], TZs.map(TZ => ({ TZ })));
+    const outputs = await runCliConcurrently(
+      ['1970-01-01', '2019-12-31'],
+      TZs.map(TZ => ({ TZ }))
+    );
 
     TZs.forEach((TZ, i) => {
-      const output = outputs[i];
+      const output = outputs[i]!;
       assert.match(output, /D<<7001017X1912319</, `wrong code under TZ=${TZ}`);
       assert.match(output, /Date of birth: Thu Jan 01 1970/, `wrong date of birth under TZ=${TZ}`);
       assert.match(output, /Date of expiry: Tue Dec 31 2019/, `wrong date of expiry under TZ=${TZ}`);
@@ -235,7 +238,7 @@ describe('cli', () => {
   });
 
   it('should print the version from package.json', () => {
-    const { version } = JSON.parse(fs.readFileSync('./package.json'));
+    const { version } = JSON.parse(fs.readFileSync('./package.json', 'utf8')) as { version: string };
     assert.equal(captureStdout(() => run(['--version'])).trim(), version);
   });
 
@@ -246,9 +249,9 @@ describe('cli', () => {
   });
 
   it('should list matching authorities as JSON', () => {
-    const results = JSON.parse(captureStdout(() => run(['--query', 'wien', '--format', 'json'])));
+    const results = JSON.parse(captureStdout(() => run(['--query', 'wien', '--format', 'json']))) as Authority[];
     assert.equal(results.length, 2);
-    assert.equal(results[0].id, '3533');
+    assert.equal(results[0]!.id, '3533');
   });
 
   it('should output plain format as just the code', () => {
@@ -257,7 +260,11 @@ describe('cli', () => {
   });
 
   it('should output json format with the code and display dates', () => {
-    const result = JSON.parse(captureStdout(() => run(['--format', 'json', '1970-01-01', '2019-12-31'])));
+    const result = JSON.parse(captureStdout(() => run(['--format', 'json', '1970-01-01', '2019-12-31']))) as {
+      code: string;
+      dateOfBirth: string;
+      dateOfExpiry: string;
+    };
     assert.match(result.code, /D<<7001017X1912319</);
     assert.equal(result.dateOfBirth, 'Thu Jan 01 1970');
     assert.equal(result.dateOfExpiry, 'Tue Dec 31 2019');
